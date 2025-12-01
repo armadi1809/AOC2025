@@ -3,32 +3,37 @@ module Main where
 import Data.Foldable (Foldable (fold))
 import Data.List.Split (splitOn)
 
-calcNewScore :: String -> Int -> Int
-calcNewScore (x : xs) score =
-  let rot = (read xs :: Int) `mod` 100
-      newScore = if x == 'L' then score - rot else score + rot
-   in if newScore > 99
-        then newScore `mod` 100
-        else
-          if newScore < 0
-            then newScore + 100
-            else newScore
+parseRotation :: String -> (Char, Int, Int)
+parseRotation (x : xs) =
+  let rot = read xs :: Int
+   in (x, rot `mod` 100, rot `div` 100)
+
+normalizeScore :: Int -> Int
+normalizeScore score
+  | score > 99 = score `mod` 100
+  | score < 0 = score + 100
+  | otherwise = score
+
+calcNewScore :: Char -> Int -> Int -> Int
+calcNewScore dir score rotMod =
+  let newScore = if dir == 'L' then score - rotMod else score + rotMod
+   in normalizeScore newScore
 
 calcNewScoreWithNumOfZeroes :: String -> Int -> (Int, Int)
-calcNewScoreWithNumOfZeroes (x : xs) score =
-  let rot = (read xs :: Int)
-      numZeros = rot `div` 100
-      newScore = calcNewScore (x : xs) score
+calcNewScoreWithNumOfZeroes action score =
+  let (dir, rotMod, rotDiv) = parseRotation action
+      newScore = calcNewScore dir score rotMod
       finalNumZeros
-        | score /= 0 && newScore > score && x == 'L' = numZeros + 1
-        | score /= 0 && newScore < score && x == 'R' = numZeros + 1
-        | newScore == 0 = numZeros + 1
-        | otherwise = numZeros
+        | score /= 0 && newScore > score && dir == 'L' = rotDiv + 1
+        | score /= 0 && newScore < score && dir == 'R' = rotDiv + 1
+        | newScore == 0 = rotDiv + 1
+        | otherwise = rotDiv
    in (newScore, finalNumZeros)
 
 step1 :: (Int, Int) -> String -> (Int, Int)
 step1 (score, numberOfZeroes) directive =
-  let newScore = calcNewScore directive score
+  let (dir, rotMod, _) = parseRotation directive
+      newScore = calcNewScore dir score rotMod
    in if newScore == 0 then (newScore, numberOfZeroes + 1) else (newScore, numberOfZeroes)
 
 step2 :: (Int, Int) -> String -> (Int, Int)
