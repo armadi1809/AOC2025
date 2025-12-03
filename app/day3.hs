@@ -6,24 +6,6 @@ import Data.List (elemIndex)
 import Data.List.Split (chunksOf, splitOn)
 import GHC.Num.Integer (integerToNaturalClamp)
 
-maxJoltageFromStr :: (Int, Int) -> String -> Int
-maxJoltageFromStr (leftHighest, rightHighest) [] = leftHighest * 10 + rightHighest
-maxJoltageFromStr (leftHighest, rightHighest) (d : rest) =
-  if null rest
-    then
-      let dig = digitToInt d
-       in if dig > rightHighest
-            then maxJoltageFromStr (leftHighest, dig) []
-            else maxJoltageFromStr (leftHighest, rightHighest) []
-    else
-      let dig = digitToInt d
-       in if dig > leftHighest
-            then maxJoltageFromStr (dig, 0) rest
-            else
-              if dig > rightHighest
-                then maxJoltageFromStr (leftHighest, dig) rest
-                else maxJoltageFromStr (leftHighest, rightHighest) rest
-
 largestKSubseq :: Int -> String -> String
 largestKSubseq = go
   where
@@ -41,7 +23,7 @@ main :: IO ()
 main = do
   inp <- readFile "./app/inputs/day3.txt"
   let inpList = splitOn "\n" inp
-  let res1 = sum (map (maxJoltageFromStr (0, 0)) inpList)
+  let res1 = sum (map (read . largestKSubseq 2) inpList)
   let res2 = sum (map (read . largestKSubseq 12) inpList)
   print res1
   print res2
