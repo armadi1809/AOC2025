@@ -1,10 +1,7 @@
 module Main where
 
-import Data.Char (digitToInt)
-import Data.Foldable (Foldable (fold), foldl')
 import Data.List (elemIndex)
-import Data.List.Split (chunksOf, splitOn)
-import GHC.Num.Integer (integerToNaturalClamp)
+import Data.List.Split (splitOn)
 
 largestKSubseq :: Int -> String -> String
 largestKSubseq = go
