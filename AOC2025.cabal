@@ -72,3 +72,6 @@ executable day03
 executable day04
   import: common-settings
   main-is: day4.hs
+executable day05
+  import: common-settings
+  main-is: day5.hs
