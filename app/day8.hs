@@ -1,8 +1,7 @@
 module Main where
 
-import Data.List (sort, sortBy)
+import Data.List (sort)
 import Data.List.Split (splitOn)
-import Data.Ord (comparing)
 
 type Point = (Int, Int, Int)
 
@@ -47,9 +46,6 @@ allEdges pts =
       i < j
   ]
 
-sortEdges :: [Edge] -> [Edge]
-sortEdges = sortBy (comparing (\(d, p1, p2) -> (d, p1, p2)))
-
 -- Part 1: Process n edges
 processEdges :: Int -> [[Point]] -> [Edge] -> [[Point]]
 processEdges 0 groups _ = groups
@@ -70,7 +66,7 @@ findLastMerge totalPoints groups ((_, a, b) : es) =
 
 simulate :: Int -> [Point] -> Int
 simulate n points =
-  let edges = sortEdges (allEdges points)
+  let edges = sort (allEdges points)
       groupsAfter = processEdges n [] edges
       touchedPoints = concat groupsAfter
       orphans = filter (`notElem` touchedPoints) points
@@ -80,7 +76,7 @@ simulate n points =
 
 simulate2 :: [Point] -> Int
 simulate2 points =
-  let edges = sortEdges (allEdges points)
+  let edges = sort (allEdges points)
       ((x1, _, _), (x2, _, _)) = findLastMerge (length points) [] edges
    in x1 * x2
 
