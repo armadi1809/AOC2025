@@ -84,4 +84,7 @@ executable day07
 executable day08
   import: common-settings
   main-is: day8.hs
+executable day09
+  import: common-settings
+  main-is: day9.hs
 
