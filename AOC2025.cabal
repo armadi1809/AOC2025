@@ -94,4 +94,7 @@ executable day10
 executable day11
   import: common-settings
   main-is: day11.hs
+executable day12
+  import: common-settings
+  main-is: day12.hs
 
